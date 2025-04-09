@@ -2,20 +2,11 @@ import json
 import random
 
 class RaulsBot():
-    """
-    This is a helper class to run the bot in the local environment.
-    The name MUST match the filename.
-    """
     def __init__(self, name):
         self.name = name
         self._bot = TemplateKitten(name)
 
     def request(self, data):
-        """
-        Request for a response
-        :param data:
-        :return:
-        """
         payload = json.loads(data)
         action = payload['action']
         if action == 'START ':
@@ -33,67 +24,46 @@ class RaulsBot():
         return None
 
 class TemplateKitten():
-    """
-    This is the bot that you will implement.
-    """
     def __init__(self, name):
         self.name = name
         self._hand = []
+        self._future_cards = []
 
     def start_round(self, data):
-        """
-        A new round has started
-        :param data:
-        :return:
-        """
         self._hand = []
+        self._future_cards = []
 
     def add_card(self, cardname):
-        """
-        Add a card to my hand
-        """
         self._hand.append(cardname)
 
     def inform(self, botname, action, response):
-        """
-        Get information about the action a bot that was taken
-        :param botname:
-        :param action:
-        :param response:
-        :return:
-        """
-        #print(f'Rando-Info: {response}')
-        if botname == self.name:
-            # I don't care about my own actions
-            pass
         pass
 
+    def has_card(self, cardname):
+        return cardname in self._hand
+
     def play(self):
-        """
-        Play a card from my hand or don't
-        :return:
-        """
-        if random.random() < 0.5:
-            return None
-        playable_cards = [card for card in self._hand if card != 'DEFUSE']
-        if playable_cards:
-            index = random.randint(0, len(playable_cards) - 1)
-            card = self._hand.pop(index)
-            return card
+        if self._future_cards:
+            if self._future_cards[0] == "Exploding Kitten":
+                if not self.has_card("DEFUSE"):
+                    if self.has_card("Skip"):
+                        self._hand.remove("Skip")
+                        return "Skip"
+                    elif self.has_card("Shuffle"):
+                        self._hand.remove("Shuffle")
+                        return "Shuffle"
+        if not self._future_cards and self.has_card("See the Future"):
+            self._hand.remove("See the Future")
+            return "See the Future"
+        if not self._future_cards and self.has_card("Shuffle"):
+            self._hand.remove("Shuffle")
+            return "Shuffle"
         return None
 
     def handle_exploding_kitten(self, deck_size):
-        """
-        I defused an exploding kitten, choose where to put it
-        :param deck_size: The size of the card deck
-        :return:
-        """
-        return random.randint(0, deck_size)
+        if deck_size <= 2:
+            return 0  # ganz oben
+        return random.randint(0, min(2, deck_size - 1))
 
     def see_the_future(self, top_three):
-        """
-        I have seen the future
-        :param top_three: A list of the top three cards
-        :return:
-        """
-        pass
+        self._future_cards = top_three

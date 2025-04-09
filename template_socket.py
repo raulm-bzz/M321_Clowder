@@ -64,9 +64,12 @@ def main():
         # call the relevant bot method depending on the action
         # send the response back to the arena
 
-OWN = '192.168.99.155'
+#OWN = '192.168.99.155'
+#HOST = "192.168.99.208"
 
-HOST = "192.168.99.208"
+OWN = '127.0.0.1'
+HOST = '127.0.0.1'
+
 PORT = 65432
 def send_request(action):
     sel = selectors.DefaultSelector()
