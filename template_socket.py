@@ -2,7 +2,6 @@
 from raulsbot import RaulsBot
 import selectors
 import socket
-import time
 import traceback
 from client_message import ClientMessage
 from server_message import ServerMessage
@@ -72,6 +71,7 @@ HOST = '127.0.0.1'
 
 PORT = 65432
 def send_request(action):
+    global new_port
     sel = selectors.DefaultSelector()
     request = create_request(action)
     start_connection(sel, HOST, PORT, request)
