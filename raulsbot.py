@@ -19,7 +19,7 @@ class RaulsBot():
             return self._bot.inform(payload['botname'], payload['event'], payload['data'])
         elif action == 'DEFUSE':
             return self._bot.handle_exploding_kitten(payload['decksize'])
-        elif action == 'FUTURE':
+        elif action == 'SEE_THE_FUTURE':
             return self._bot.see_the_future(payload['cards'])
         return None
 
